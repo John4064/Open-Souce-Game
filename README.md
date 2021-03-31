@@ -33,7 +33,7 @@ Go through this checklist after creating your repository. It should only take a 
 
 ### Other Files
 - [ ] Copy `CODE_OF_CONDUCT.md` verbatim.
-- [ ] Copy `CONTRIBUTING.md` and ensure that you've added any repository-specific instructions. (Replace `<Replace Title>` again).
+- [ ] Copy `CONTRIBUTING.md` and ensure that you've added any repository-specific instructions. (Replace `Open-Source-Game` again).
 - [ ] Should you have a `CHANGELOG.md`? Document your release process, if you plan on having one, in the `CONTRIBUTING.md` file.
 
 ### Dotfiles
