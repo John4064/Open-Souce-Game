@@ -1,98 +1,48 @@
-import pygame as pg
-from pygame.locals import (
-    K_UP,
-    K_DOWN,
-    K_LEFT,
-    K_RIGHT,
-    K_ESCAPE,
-    KEYDOWN,
-    QUIT,
-)
-from config import *
-pg.init()
+#from gamescene import *
+from titlescene import *
+from button import *
+import pygame
 
-screen = pg.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
-# Run until the user asks to quit
-running = True
-class player(pg.sprite.Sprite):
-    def update(self, *args, **kwargs):
-        pg.draw.circle(screen, (0, 0, 255), (self.x,self.y), 25)
-        return
-    def input(self,userI):
-        if event.key == K_UP:
-            self.y-=15
-            print(self.y)
-        if event.key == K_DOWN:
-            self.y+=15
-            print(self.y)
-        if event.key == K_LEFT:
-            self.x-=15
-            print(self.x)
-        if event.key == K_RIGHT:
-            self.x+=15
-            print(self.x)
-        return
+class game:
+    def run_game(self,width, height, starting_scene):
+        pg.init()
+        screen = pg.display.set_mode((width, height))
+        clock = pg.time.Clock()
 
-    def __init__(self,x,y):
-        pg.sprite.Sprite.__init__(self)
-        self.x =x
-        self.y=y
-        #h is height w is width
-        self.h = 30
-        self.w = 20
-class button():
-    def update(self, *args, **kwargs):
-        # defining a font
-        smallfont = pg.font.SysFont('Corbel', 35)
-        text = smallfont.render('quit', True, (255, 255, 0))
-        pg.draw.rect(screen,self.color,[self.x,self.x,self.y+40,self.y-60])
-        screen.blit(text, (self.x + 50, self.y))
-        return
-    def input(self,mouseX,mouseY):
-        if ((mouseX>self.x and mouseX<self.x+140) and (mouseY>self.y and mouseY<self.y+40)):
-            self.color = (128,0,127)
-        return
-    def __init__(self,x,y):
-        self.x=x
-        self.y=y
-        self.color =(255,0,0)
-class enemy(pg.sprite.Sprite):
-    def update(self, *args, **kwargs):
-        pg.draw.rect(screen,(255,0,0),[100,100,140,40])
-        return
-    def __init__(self,x,y):
-        self.x=x
-        self.y=y
+        active_scene = starting_scene
 
-#Declaring the player
-myPlayer = player(300,500)
-test1 = button(100,100)
-while running:
-    #Getting the Mouse Position
-    mouse = pg.mouse.get_pos()
-    for event in pg.event.get():
-        #User Input
+        while active_scene != None:
+            pressed_keys = pg.key.get_pressed()
 
-        if event.type == KEYDOWN:
-            if event.key == K_ESCAPE:
-                #Exits the game if escape is pressed
-                running = False
+            # Event filtering
+            filtered_events = []
+            for event in pg.event.get():
+                quit_attempt = False
+                if event.type == pg.QUIT:
+                    quit_attempt = True
+                elif event.type == pg.KEYDOWN:
+                    alt_pressed = pressed_keys[pg.K_LALT] or \
+                                  pressed_keys[pg.K_RALT]
+                    if event.key == pg.K_ESCAPE:
+                        quit_attempt = True
+                    elif event.key == pg.K_F4 and alt_pressed:
+                        quit_attempt = True
 
-            #This just handles the input of the user
-            myPlayer.input(event.key)
-        elif event.type == QUIT:
-            running = False
-        #if mouse press
-        if event.type == pg.MOUSEBUTTONDOWN:
-            test1.input(mouse[0],mouse[1])
-    #color for background
-    screen.fill((255, 255, 255))
-    #draws the player based on theinput
-    myPlayer.update()
-    test1.update()
-    pg.display.flip()
+                if quit_attempt:
+                    active_scene.Terminate()
+                else:
+                    filtered_events.append(event)
 
-    # Ensure program maintains a rate of 30 frames per second
-    pg.time.Clock().tick(30)
+            active_scene.ProcessInput(filtered_events, pressed_keys)
+            active_scene.Update()
+            active_scene.Render(screen)
 
-pg.quit()
+            active_scene = active_scene.next
+
+            pg.display.flip()
+            #60 fps
+            clock.tick(60)
+    def __init__(self):
+        self.run_game(800, 600, TitleScene())
+
+Fusemore = game()
