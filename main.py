@@ -23,9 +23,7 @@ class game:
                 elif event.type == pg.KEYDOWN:
                     alt_pressed = pressed_keys[pg.K_LALT] or \
                                   pressed_keys[pg.K_RALT]
-                    if event.key == pg.K_ESCAPE:
-                        quit_attempt = True
-                    elif event.key == pg.K_F4 and alt_pressed:
+                    if event.key == pg.K_ESCAPE or (event.key == pg.K_F4 and alt_pressed):
                         quit_attempt = True
 
                 if quit_attempt:
@@ -36,7 +34,7 @@ class game:
             active_scene.ProcessInput(filtered_events, pressed_keys)
             active_scene.Update()
             active_scene.Render(screen)
-
+            #print(pg.mouse.get_pos())
             active_scene = active_scene.next
 
             pg.display.flip()
