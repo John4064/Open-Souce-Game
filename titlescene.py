@@ -27,7 +27,7 @@ class TitleScene(SceneBase):
         # For the sake of brevity, the title scene is a blank red screen
         screen.fill((255, 0, 0))
         #Test button
-        self.mouse1 = [400,500]
+        self.mouse1 = [400,300]
         self.test1 = button(self.mouse1[0],self.mouse1[1], 100, 40, 'Test', (0, 13, 55), screen)
         self.test1.update()
 
